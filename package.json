@@ -1,0 +1,21 @@
+{
+  "name": "valorantstats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "-": "^0.0.1",
+    "customizable-discordjs-pagination": "^2.0.1",
+    "discord.js": "^14.6.0",
+    "g": "^2.0.1",
+    "unofficial-valorant-api": "^2.3.0-stable.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0"
+  }
+}
