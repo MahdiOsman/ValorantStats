@@ -31,10 +31,10 @@ function getPlayerDeathsByPUUID(data, puuid) {
 function getPlayerHeadshotAccuracyByPUUID(data, puuid) {
     for (let i = 0; i < 10; i++) {
         if (data.all_players[i].puuid == puuid) {
-            let headshots = data.all_players[i].stats.headshots;
-            let bodyshots = data.all_players[i].stats.bodyshots;
-            let legshots = data.all_players[i].stats.legshots;
-            let headshotAccuracy = (headshots / (headshots + bodyshots + legshots)) * 100;
+            const headshots = data.all_players[i].stats.headshots;
+            const bodyshots = data.all_players[i].stats.bodyshots;
+            const legshots = data.all_players[i].stats.legshots;
+            const headshotAccuracy = (headshots / (headshots + bodyshots + legshots)) * 100;
 
             return headshotAccuracy.toFixed(1);
         };
@@ -64,26 +64,28 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const _size = 10; // Number of matches to get 
+        const _size = 10; // Number of matches to get
         const username = interaction.options.get('username'); // Player username
         const tag = interaction.options.get('tag'); // Player tag
         // GET Requests
         let jsonData; // Player data as json object
-        let playerMatches; // Match history as json object
-
-        // TODO: 
+        // TODO: Add validation to user name and tag.
+        // If it does not exist output error in chat. e.g. "Can not find user"
         try {
             jsonData = await VAPI.fetchAccount(username.value, tag.value);
         } catch (error) {
             console.log(error);
             await interaction.reply('ERROR');
         }
+        // Player match history as json object
+        const playerMatches = await VAPI.fetchMatches(`${JSON.stringify(jsonData.data.region).replace(/"/g, '')}`, username.value, tag.value, _size.toString());
 
-        playerMatches = await VAPI.fetchMatches(`${JSON.stringify(jsonData.data.region).replace(/"/g, '')}`, username.value, tag.value, _size.toString());
-
-        // Format Embed
-        // This will show an embed with 2 buttons
-        // There are 10 pages
+        /**
+         * Format Embed
+         * This will show an embed with 2 buttons
+         * There are 10 pages
+         * For more information about how this is done check ../command-breakdown/matchjs.md
+         */
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 0;
         const match1 = new EmbedBuilder()
