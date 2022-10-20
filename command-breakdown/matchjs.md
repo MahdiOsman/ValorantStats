@@ -116,7 +116,7 @@ e.g. ```getPlayerKillsByPUUID(data, puuid)``` The *data* input uses the *_jsonAr
 This can be seen here:
 ```{ name: 'Gamemode', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```
 
-The *value* is found using ````${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }``` where ```playerMatches.data[_jsonArrayPosition].metadata.mode)``` is used in order to get the gamemode of the game from the 1st element within the array. ```.replace(/"/g, '')``` replace the quotes that are recieved from the JSON array as the function should not read the quotes. e.g. Data is recieved as *"test"* but we want *test*.
+The *value* is found using ````${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```` where ```playerMatches.data[_jsonArrayPosition].metadata.mode)``` is used in order to get the gamemode of the game from the 1st element within the array. ```.replace(/"/g, '')``` replace the quotes that are recieved from the JSON array as the function should not read the quotes. e.g. Data is recieved as *"test"* but we want *test*.
 
 
 ### getPlayerKillsByPUUID(data, puuid)
@@ -129,4 +129,4 @@ function getPlayerKillsByPUUID(data, puuid) {
     };
 };
 ```
-We loop through all the players within the match until we find the player being searched for using their puuid which is found when the ```fetchAccount(username, tag)``` is called. Once we find the players stats we will return the number of kills. The same thing is done for the other functions.
+We loop through all the players within the match until we find the player being searched for using their puuid which is found when the ```fetchAccount(username, tag);``` is called. Once we find the players stats we will return the number of kills. The same thing is done for the other functions.
