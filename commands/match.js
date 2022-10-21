@@ -67,15 +67,11 @@ module.exports = {
         const _size = 10; // Number of matches to get
         const username = interaction.options.get('username'); // Player username
         const tag = interaction.options.get('tag'); // Player tag
-        // GET Requests
-        let jsonData; // Player data as json object
-        // TODO: Add validation to user name and tag.
-        // If it does not exist output error in chat. e.g. "Can not find user"
-        try {
-            jsonData = await VAPI.fetchAccount(username.value, tag.value);
-        } catch (error) {
-            console.log(error);
-            await interaction.reply('ERROR');
+        const jsonData = await VAPI.fetchAccount(username.value, tag.value);
+        // Validation: If user does not exist reply with error
+        if (jsonData.status == '404') {
+            await interaction.editReply('User not found!');
+            return;
         }
         // Player match history as json object
         const playerMatches = await VAPI.fetchMatches(`${JSON.stringify(jsonData.data.region).replace(/"/g, '')}`, username.value, tag.value, _size.toString());
