@@ -49,6 +49,14 @@ function getPlayerCharacterByPUUID(data, puuid) {
         };
     };
 };
+
+// Check if gamemode is deathmatch
+function isDeathmatch(data) {
+    if (data.game == 'Deathmatch') {
+        return true;
+    };
+    return false;
+};
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('match')
@@ -94,6 +102,7 @@ module.exports = {
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'TEST', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata)}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 1;
