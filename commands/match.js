@@ -2,7 +2,7 @@ const { Discord, SlashCommandBuilder, EmbedBuilder, ButtonStyle, ButtonBuilder, 
 const Pagination = require('customizable-discordjs-pagination');
 const VAPI = require('../vapi.js');
 
-// Return player kills/assists/deaths by comapring puuid
+// Return player kills/assists/deaths by comparing puuid
 function getPlayerKillsByPUUID(data, puuid) {
     for (let i = 0; i < 10; i++) {
         if (data.all_players[i].puuid == puuid) {
@@ -90,6 +90,7 @@ module.exports = {
          * There are 10 pages
          * For more information about how this is done check ../command-breakdown/matchjs.md
          */
+        // TODO: Add check for deathmatch
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 0;
         const match1 = new EmbedBuilder()
