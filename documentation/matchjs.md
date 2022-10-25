@@ -2,7 +2,7 @@
 
 Main code for each embed:
 ```
-// Return player kills/assists/deaths by comapring puuid
+// Return player kills/assists/deaths by comparing puuid
 function getPlayerKillsByPUUID(data, puuid) {
     for (let i = 0; i < 10; i++) {
         if (data.all_players[i].puuid == puuid) {
