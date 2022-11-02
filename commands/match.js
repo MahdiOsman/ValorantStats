@@ -77,8 +77,8 @@ module.exports = {
         const tag = interaction.options.get('tag'); // Player tag
         const jsonData = await VAPI.fetchAccount(username.value, tag.value);
         // Validation: If user does not exist reply with error
-        if (jsonData.status == '404') {
-            await interaction.editReply('User not found!');
+        if (jsonData.status != '200') {
+            await interaction.editReply('An error has occurred!\nPlease try again later. <3');
             return;
         }
         // Player match history as json object
@@ -102,8 +102,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
-                { name: 'TEST', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata)}` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 1;
@@ -116,7 +115,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 2;
@@ -129,7 +128,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 3;
@@ -142,7 +141,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 4;
@@ -155,7 +154,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 5;
@@ -168,7 +167,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 6;
@@ -181,7 +180,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 7;
@@ -194,7 +193,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 8;
@@ -207,7 +206,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // eslint-disable-next-line no-var
         var _jsonArrayPosition = 9;
@@ -220,7 +219,7 @@ module.exports = {
                 { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
                 { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
                 { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-                { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[_jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))).concat('%')}` },
             );
         // Array of embeds to be put into pages
         const pages = [match1, match2, match3, match4, match5, match6, match7, match8, match9, match10];
