@@ -6,6 +6,10 @@ module.exports = {
         .setName('about')
         .setDescription('About the bot and Disclaimer.'),
     async execute(interaction) {
+        // Date
+        const timeElapsed = Date.now();
+        const today = new Date(timeElapsed);
+
         // Format Embed
         const replyEmbed = new EmbedBuilder()
         .setColor(0xFA4454)
@@ -14,7 +18,8 @@ module.exports = {
         .addFields(
             { name: 'About', value: 'This was made as a personal project in order to test out Riot Games\' Valorant API' },
             { name: 'Disclaimer', value: 'We are not affiliated, associated, authorized, endorsed by, or in any way officially connected with Riot Games.' },
-        );
+        )
+        .setFooter({ text: today.toUTCString() });
 
         // Bot Reply
         try {
