@@ -19,8 +19,8 @@ module.exports = {
         // GET Requests
         const jsonData = await VAPI.fetchAccount(username.value, tag.value);
         // Validation: If user does not exist reply with error
-        if (jsonData.status == '404') {
-            await interaction.reply('User not found!');
+        if (jsonData.status != '200') {
+            await interaction.editReply('An error has occurred!\nPlease try again later. <3');
             return;
         }
         const playerRank = await VAPI.fetchRank('v2', 'mmr', `${JSON.stringify(jsonData.data.region).replace(/"/g, '')}`, `${JSON.stringify(jsonData.data.puuid).replace(/"/g, '')}`);
