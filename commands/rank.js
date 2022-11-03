@@ -95,8 +95,8 @@ module.exports = {
         .addFields(
             { name: 'Username', value: `${JSON.stringify(jsonData.data.name).replace(/"/g, '')}#${JSON.stringify(jsonData.data.tag).replace(/"/g, '')}` },
             { name: 'Level', value:  `${JSON.stringify(jsonData.data.account_level).replace(/"/g, '')}` },
-            { name: 'Region', value:  `${JSON.stringify(jsonData.data.region).replace(/"/g, '')}` },
             { name:  'Rank', value: `${concat(JSON.stringify(playerRank.data.current_data.currenttierpatched).replace(/"/g, ''), getRankEmoji(JSON.stringify(playerRank.data.current_data.currenttierpatched).replace(/"/g, '')))}` },
+            { name: 'Region', value:  `${JSON.stringify(jsonData.data.region).replace(/"/g, '').toUpperCase()}` },
         )
         .setImage(`${JSON.stringify(jsonData.data.card.wide).replace(/"/g, '')}`);
 
@@ -105,6 +105,7 @@ module.exports = {
             await interaction.reply({ embeds: [replyEmbed] });
         } catch (err) {
             console.error(err);
+            await interaction.reply('An error occurred!\nPlease try again. <3');
         }
     },
 };
