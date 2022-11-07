@@ -2,6 +2,22 @@
 
 Main code for each embed:
 ```
+// Return an embed
+function getEmbed(jsonArrayPosition, userData, playerMatches) {
+    const embed = new EmbedBuilder()
+            .setColor(0xFA4454)
+            .setTitle(`${JSON.stringify(userData.data.name).replace(/"/g, '')}'s Match History`)
+            .setThumbnail('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ViRuhE2KJirJx9yvzxAQP7oqN54LqfpVR1M249U&s')
+            .addFields(
+                { name: 'Gamemode', value: `${JSON.stringify(playerMatches.data[jsonArrayPosition].metadata.mode).replace(/"/g, '')}` },
+                { name: 'Map', value: `${JSON.stringify(playerMatches.data[jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
+                { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[jsonArrayPosition].players, JSON.stringify(userData.data.puuid).replace(/"/g, ''))}` },
+                { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[jsonArrayPosition].players, JSON.stringify(userData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[jsonArrayPosition].players, JSON.stringify(userData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[jsonArrayPosition].players, JSON.stringify(userData.data.puuid).replace(/"/g, ''))}` },
+                { name: 'Headshot Accuracy', value: `${isDeathmatch(playerMatches.data[jsonArrayPosition].metadata) ? 'N/A' : (getPlayerHeadshotAccuracyByPUUID(playerMatches.data[jsonArrayPosition].players, JSON.stringify(userData.data.puuid).replace(/"/g, ''))).concat('%')}` },
+            );
+    return embed;
+}
+
 // Return player kills/assists/deaths by comparing puuid
 function getPlayerKillsByPUUID(data, puuid) {
     for (let i = 0; i < 10; i++) {
@@ -50,6 +66,7 @@ function getPlayerCharacterByPUUID(data, puuid) {
     };
 };
 
+const matches = {};
 const _size = 10; // Number of matches to get
 const username = interaction.options.get('username'); // Player username
 const tag = interaction.options.get('tag'); // Player tag
@@ -58,18 +75,10 @@ const jsonData = await VAPI.fetchAccount(username.value, tag.value);
 // Player match history as json object
 const playerMatches = await VAPI.fetchMatches(`${JSON.stringify(jsonData.data.region).replace(/"/g, '')}`, username.value, tag.value, _size.toString());
 
-var _jsonArrayPosition = 0;
-const match1 = new EmbedBuilder()
-    .setColor(0xFA4454)
-    .setTitle(`${JSON.stringify(jsonData.data.name).replace(/"/g, '')}'s Match History`)
-    .setThumbnail('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0ViRuhE2KJirJx9yvzxAQP7oqN54LqfpVR1M249U&s')
-    .addFields(
-        { name: 'Gamemode', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` },
-        { name: 'Map', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.map).replace(/"/g, '')}` },
-        { name: 'Agent', value: `${getPlayerCharacterByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-        { name: 'KDA', value: `${getPlayerKillsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerDeathsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}/${getPlayerAssistsByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}` },
-        { name: 'Headshot Accuracy', value: `${getPlayerHeadshotAccuracyByPUUID(playerMatches.data[_jsonArrayPosition].players, JSON.stringify(jsonData.data.puuid).replace(/"/g, ''))}%` },
-);
+// Adds embed vars to array matches[]
+for (let i = 0; i < 10; i++) {
+            matches[i] = getEmbed(i, userData, playerMatches);
+        }
 ```
 
 ## The structure of the JSON array is:
@@ -103,20 +112,28 @@ const match1 = new EmbedBuilder()
 
 ## Line by line breakdown
 
-There will be 10 different sections that include the same format with different data based on each match.
-
-
 The output from the ```fetchMatches(region, username, tag, size);``` function can be found at ~/test/Output.js
 
 We have given the *size* a value of 10, this will get the previous 10 matches played by the player. Each match is put into a JSON array. e.g. *data[0]* is match 1, *data[1]* is match 2 etc.
 
-```var _jsonArrayPosition = 0;``` This is used as a constant for each embed and changed before the next embed is defined. It is the position given to the functions data input in order for the function to search through the correct match. 
-e.g. ```getPlayerKillsByPUUID(data, puuid)``` The *data* input uses the *_jsonArrayPosition* variable in order to get the 1st element within the JSON array.
 
-This can be seen here:
-```{ name: 'Gamemode', value: `${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```
+### getEmbed(jsonArrayPositions, userData, playerMatches);
+This function takes in 3 parameters.
+*jsonArrayPosition* - The position of the specific match withing the json array.
+*userData* - JSON user data.
+*playerMatches* - JSON match data.
 
-The *value* is found using ````${JSON.stringify(playerMatches.data[_jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```` where ```playerMatches.data[_jsonArrayPosition].metadata.mode)``` is used in order to get the gamemode of the game from the 1st element within the array. ```.replace(/"/g, '')``` replace the quotes that are recieved from the JSON array as the function should not read the quotes. e.g. Data is recieved as *"test"* but we want *test*.
+We use a for-loop using this function in order to dynamically create variables that contain each embed correlating to each match.
+```
+for (let i = 0; i < 10; i++) {
+            matches[i] = getEmbed(i, userData, playerMatches);
+        }
+```
+
+The *i* variable is the position of the match within the JSON data. This can be seen here:
+```{ name: 'Gamemode', value: `${JSON.stringify(playerMatches.data[jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```
+
+The *value* is found using ````${JSON.stringify(playerMatches.data[jsonArrayPosition].metadata.mode).replace(/"/g, '')}` }```` where ```playerMatches.data[jsonArrayPosition].metadata.mode)``` is used in order to get the gamemode of the game from the 1st element within the array. ```.replace(/"/g, '')``` replace the quotes that are recieved from the JSON array as the function should not read the quotes. e.g. Data is recieved as *"test"* but we want *test*.
 
 
 ### getPlayerKillsByPUUID(data, puuid)
